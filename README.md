@@ -1,4 +1,4 @@
-# metrics-exporter Project
+#   Project
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
@@ -19,17 +19,27 @@ The application can be packaged using:
 ```shell script
 ./mvnw package
 ```
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
-
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
-
-If you want to build an _über-jar_, execute the following command:
 ```shell script
-./mvnw package -Dquarkus.package.type=uber-jar
+docker build -f src/main/docker/Dockerfile.jvm -t quarkus/metrics-exporter-jvm .
 ```
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+```shell script
+docker tag quarkus/metrics-exporter-jvm:latest viniciusfcf/one-tap-soccer-metrics-exporter:latest
+```
+
+```shell script
+docker push viniciusfcf/one-tap-soccer-metrics-exporter:latest
+```
+
+or
+
+```shell script
+docker tag quarkus/metrics-exporter-jvm:latest quay.io/vflorent/one-tap-soccer-metrics-exporter:latest
+```
+
+```shell script
+docker push quay.io/vflorent/one-tap-soccer-metrics-exporter:latest
+```
 
 ## Creating a native executable
 
@@ -43,7 +53,7 @@ Or, if you don't have GraalVM installed, you can run the native executable build
 ./mvnw package -Pnative -Dquarkus.native.container-build=true
 ```
 
-You can then execute your native executable with: `./target/metrics-exporter-1.0.0-SNAPSHOT-runner`
+You can then execute your native executable with: `./target/ -1.0.0-SNAPSHOT-runner`
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.
 
