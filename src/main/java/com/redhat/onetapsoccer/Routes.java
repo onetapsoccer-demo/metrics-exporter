@@ -47,27 +47,27 @@ public class Routes extends RouteBuilder {
             .parameter("metric", "pole-collision")
             .parameter("query", "sum(com_redhat_onetapsoccer_pole_collision_total)");
 
-            templatedRoute("prometheusTemplate")
+        templatedRoute("prometheusTemplate")
             .parameter("metric", "shoot")
             .parameter("query", "sum(com_redhat_onetapsoccer_shoot_total)");
 
-            templatedRoute("prometheusTemplate")
+        templatedRoute("prometheusTemplate")
             .parameter("metric", "game-over")
             .parameter("query", "sum(com_redhat_onetapsoccer_game_over_total)");
 
-            templatedRoute("prometheusTemplate")
+        templatedRoute("prometheusTemplate")
             .parameter("metric", "head-collision")
             .parameter("query", "sum(com_redhat_onetapsoccer_head_collision_total)");
 
-            templatedRoute("prometheusTemplate")
+        templatedRoute("prometheusTemplate")
             .parameter("metric", "goals-per-player")
             .parameter("query", "sum by (player) (com_redhat_onetapsoccer_total{\"kind\"=\"goal\"})");
 
-            templatedRoute("prometheusTemplate")
+        templatedRoute("prometheusTemplate")
             .parameter("metric", "total-events")
             .parameter("query", "sum(com_redhat_onetapsoccer_total)");
 
-            templatedRoute("prometheusTemplate")
+        templatedRoute("prometheusTemplate")
             .parameter("metric", "unique-users")
             .parameter("query", "count(count by (user) (com_redhat_onetapsoccer_game_start_total))");
             
