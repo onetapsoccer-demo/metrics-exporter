@@ -1,0 +1,5 @@
+#if(${body.data.result.isEmpty()})
+0
+#else
+${body.data.result[0].get("value")[1]}
+#end
