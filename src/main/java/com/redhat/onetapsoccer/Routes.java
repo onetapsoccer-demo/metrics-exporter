@@ -17,8 +17,9 @@ public class Routes extends RouteBuilder {
             .templateParameter("query")
             .templateParameter("metric")
             .from("rest:get:metrics/{{metric}}")
+            .setHeader("Authorization", constant("Bearer {{grafana.sa.token}}"))
             .removeHeader(Exchange.HTTP_PATH)
-            .recipientList(simple("http:{{prometheus.host}}/api/v1/query" +
+            .recipientList(simple("{{prometheus.schema}}:{{prometheus.host}}/api/v1/query" +
             "?query={{query}}&bridgeEndpoint=true"))
             .unmarshal().json(JsonLibrary.Jackson)
             .log("Received : \"${body}\"")
