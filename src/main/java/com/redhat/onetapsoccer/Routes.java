@@ -2,10 +2,14 @@
 package com.redhat.onetapsoccer;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
+import javax.inject.Named;
+import javax.net.ssl.HostnameVerifier;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
 
 @ApplicationScoped
 public class Routes extends RouteBuilder {
@@ -20,7 +24,7 @@ public class Routes extends RouteBuilder {
             .setHeader("Authorization", constant("Bearer {{grafana.sa.token}}"))
             .removeHeader(Exchange.HTTP_PATH)
             .recipientList(simple("{{prometheus.schema}}:{{prometheus.host}}/api/v1/query" +
-            "?query={{query}}&bridgeEndpoint=true"))
+            "?query={{query}}&bridgeEndpoint=true&x509HostnameVerifier=NoopHostnameVerifier"))
             .unmarshal().json(JsonLibrary.Jackson)
             .log("Received : \"${body}\"")
             .to("velocity:prometheus.vm?contentCache=true")
@@ -88,4 +92,9 @@ public class Routes extends RouteBuilder {
             // .parameter("query", "topk(10, max by (userName) (com_redhat_onetapsoccer_score))");
 
     }
+
+    @Produces @Named("NoopHostnameVerifier")
+	public HostnameVerifier foo() {
+	    return new NoopHostnameVerifier();
+	}
 }
