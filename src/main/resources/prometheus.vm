@@ -1,5 +1,9 @@
 #if(${body.data.result.isEmpty()})
 0
 #else
-${body.data.result[0].get("value")[1]}
+#set ($values = ${body.data.result[0].get("values")})
+#set ($size = $values.size())
+#set ($b = 1)
+#set ($index = $size - $b)
+$values[$index][1]
 #end

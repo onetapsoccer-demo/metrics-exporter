@@ -16,15 +16,17 @@ public class Routes extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
-
+        //Example https://grafana-route-kafka-cluster.apps.exxlzr2j.eastus.aroapp.io/api/datasources/proxy/1/api/v1/query_range?query=sum(com_redhat_onetapsoccer_total)&start=1676317445&end=1676321045&step=5
+        //&start=1676317445&end=1676321045&step=5
         routeTemplate("prometheusTemplate")
             .templateParameter("query")
             .templateParameter("metric")
             .from("rest:get:metrics/{{metric}}")
             .setHeader("Authorization", constant("Bearer {{grafana.sa.token}}"))
+            .bean(RangeBean.class)
             .removeHeader(Exchange.HTTP_PATH)
-            .recipientList(simple("{{prometheus.schema}}:{{prometheus.host}}/api/v1/query" +
-            "?query={{query}}&bridgeEndpoint=true&x509HostnameVerifier=NoopHostnameVerifier"))
+            .recipientList(simple("{{prometheus.schema}}:{{prometheus.host}}/api/v1/query_range" +
+            "?query={{query}}&bridgeEndpoint=true&x509HostnameVerifier=NoopHostnameVerifier&start=${header.start}&end=${header.end}&step=5"))
             .unmarshal().json(JsonLibrary.Jackson)
             .log("Received : \"${body}\"")
             .to("velocity:prometheus.vm?contentCache=true")
@@ -32,6 +34,8 @@ public class Routes extends RouteBuilder {
             ;
         ;
 
+
+        //LocalDateTime.now().toEpochSecond(ZoneOffset.ofHours(-3))
         templatedRoute("prometheusTemplate")
             .parameter("metric", "goals-rate")
             .parameter("query", "sum(com_redhat_onetapsoccer_goal_total)/sum(com_redhat_onetapsoccer_shoot_total)");
